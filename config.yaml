@@ -1,0 +1,115 @@
+# =========================================
+# Integrated Config: Image + BGM
+# Japan × Lo-fi Edition
+# =========================================
+
+# -----------------------------------------
+# IMAGE CONFIG
+# -----------------------------------------
+image:
+  common:
+    model: "runwayml/stable-diffusion-v1-5"
+    sampler: "DPM++ 2M Karras"
+    steps: 50
+    cfg_scale: 5.8
+    width: 768 #1024
+    height: 512 #768
+    seed: -1
+    batch_size: 1
+    count: 5  # 生成する画像枚数（CLIで上書き可能）
+
+    negative_prompt: >
+      close-up face, portrait, selfie, looking at camera,
+      anime, cartoon, illustration,
+      oversaturated, vibrant colors,
+      text, watermark, logo, signature,
+      blurry, low quality, distorted,
+      extra limbs, bad hands
+
+  presets:
+    sakura_wet_snowy:
+      description: "桜×夜×濡れ路面＋雪/みぞれ粒（幻想寄り）"
+      prompt: >
+        cinematic night street in Tokyo,
+        wet asphalt reflections, light snowfall mixed with rain (sleet),
+        cherry blossom tree sakura blooming, petals drifting,
+        quiet street, minimal traffic, empty atmosphere,
+        warm shop lights, subtle lantern light,
+        low saturation, monochrome-ish but with soft pink blossoms,
+        film grain, long exposure, atmospheric, realistic photo
+
+    sakura_rain_street:
+      description: "雨の夜×桜×日本の街角（低彩度／桜ピンク残し／路面反射）"
+      prompt: >
+        cinematic night street scene in Japan,
+        rainy night, wet asphalt pavement with strong mirror-like reflections,
+        massive cherry blossom tree (sakura) in full bloom dominating the scene,
+        pink sakura petals falling in the rain,
+        traditional wooden storefronts with lattice doors and windows,
+        warm amber and coral neon lights reflecting on wet ground,
+        dark blue and teal shadow tones, minimal lighting,
+        misty rain streaks, bokeh light reflections,
+        low saturation color palette with pink as the only vibrant hue,
+        film noir aesthetic, 35mm film photography, soft film grain,
+        long exposure effect, high contrast, moody atmosphere, ultra realistic, professional cinematography
+
+    tokyo_dreamy_lofi_night:
+      description: "夜の日本の幻想×ローファイ背景向け（霧＋ネオン＋低彩度）"
+      prompt: >
+        cinematic night alley in Tokyo, light fog and thin mist drifting, wet asphalt with mirror reflections,
+        soft neon signs in cyan and amber, paper lantern glow, vending machine light spill,
+        quiet empty street, minimal people, power lines overhead, subtle rain droplets, puddles,
+        low saturation with gentle teal-orange contrast, shallow depth of field bokeh,
+        film grain, 35mm long exposure, dreamy and moody atmosphere, realistic photo
+
+# -----------------------------------------
+# MUSICGEN CONFIG
+# -----------------------------------------
+musicgen:
+  model: "facebook/musicgen-large"
+  duration: 45  # 1セグメントの長さ（秒）
+
+# -----------------------------------------
+# GENERATION CONFIG
+# -----------------------------------------
+generation:
+  prompt: "lo-fi hip-hop background music with soft piano and chill vibes"
+  num_tracks: 10                    # 生成するセグメント数
+  total_duration_sec: 3600         # 最終的なBGM長（秒）
+  select_track: "auto"             # auto/first/random
+  device: "auto"                   # auto/cuda/mps/cpu
+  crossfade_ms: 250                # クロスフェード長（ミリ秒）
+  fade_ms: 30                       # フェード長（ミリ秒）
+  output_dir: "outputs"
+  takes_dir: "outputs/_takes"      # 各セグメント保存先
+  final_dir: "outputs/_final"      # 最終ファイル保存先
+  final_output: "bgm.wav"          # 最終ファイル名
+
+# -----------------------------------------
+# MUSIC PRESETS
+# -----------------------------------------
+music:
+  presets:
+    sakura_ambient:
+      description: "lo-fi ambient music with soft piano and nature sounds"
+      prompt: "lo-fi ambient music with soft piano and cherry blossom theme, peaceful and dreamy, nature sounds, rain"
+
+    sakura_calm:
+      description: "calm evening ambient with lo-fi vibes"
+      prompt: "calm evening ambient background music with light rain sounds, sakura theme, lo-fi, relaxing, minimal"
+
+    sakura_lofi:
+      description: "lo-fi hip-hop with cherry blossom theme"
+      prompt: "lo-fi hip-hop style background music with subtle cherry blossom theme, cozy bedroom vibes, chill beats"
+
+    lofi_night_reader:
+      description: "夜の読書用：静かなループ、低めのビート"
+      prompt: "lo-fi hip hop background for late-night reading, 72-78 bpm, brushed drums, soft sidechained pads, warm Rhodes, gentle vinyl hiss, no vocals, no lead melodies, very low percussion, smooth endless loop, calming and non-distracting"
+
+    lofi_sleep_rain:
+      description: "睡眠・雨音：極シンプルで揺れない"
+      prompt: "minimal lo-fi ambient with distant rain and soft tape hiss, 60-68 bpm, almost no drums, slow swelling pads, faint piano voicings, no vocals, no bright highs, ultra smooth loop for sleep and long play"
+
+    lofi_cafe_warmth:
+      description: "カフェ作業：温かいコードと軽いビート"
+      prompt: "warm lo-fi hip hop for cozy cafe study, 78-84 bpm, soft rimshots and brushed snare, upright bass, mellow piano chords, light vinyl crackle, no vocals, no sharp leads, unobtrusive and steady groove"
