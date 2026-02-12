@@ -2,13 +2,11 @@
 # -*- coding: utf-8 -*-
 """
 music_gen.py
-- MusicGen を使用してBGMを生成
-- 複数セグメント生成 → シャッフル → クロスフェード接続 → ループで指定長に拡張
-- lofi_batch.py の手法に基づいて実装
+- MusicGen を使用してセグメントのみ生成するスクリプト
+- 生成したトラックの連結・ループは別スクリプトで実施
 """
 
 import os
-import math
 import yaml
 import torch
 import argparse
@@ -104,73 +102,6 @@ def apply_fade(audio: np.ndarray, sr: int, fade_ms: int = 30) -> np.ndarray:
     return audio
 
 
-def crossfade_concat(chunks: list[np.ndarray], sr: int, crossfade_ms: int = 250) -> np.ndarray:
-    """Concatenate audio chunks with crossfade."""
-    if not chunks:
-        raise ValueError("No audio chunks to concatenate.")
-
-    if crossfade_ms <= 0 or len(chunks) == 1:
-        return np.concatenate(chunks)
-
-    xf = int(sr * (crossfade_ms / 1000.0))
-    if xf <= 1:
-        return np.concatenate(chunks)
-
-    out = chunks[0].astype(np.float32)
-    for nxt in chunks[1:]:
-        nxt = nxt.astype(np.float32)
-
-        if len(out) < xf or len(nxt) < xf:
-            out = np.concatenate([out, nxt])
-            continue
-
-        a = out[:-xf]
-        b1 = out[-xf:]
-        b2 = nxt[:xf]
-        c = nxt[xf:]
-
-        w = np.linspace(0.0, 1.0, xf, dtype=np.float32)
-        blended = b1 * (1.0 - w) + b2 * w
-        out = np.concatenate([a, blended, c])
-
-    return out
-
-
-def loop_to_length_crossfade(
-    audio: np.ndarray, sr: int, target_sec: int, crossfade_ms: int = 30
-) -> np.ndarray:
-    """Loop audio to target length using crossfade."""
-    if target_sec <= 0:
-        raise ValueError("target_sec must be > 0")
-    audio = np.asarray(audio, dtype=np.float32)
-    if len(audio) == 0:
-        raise ValueError("audio is empty")
-
-    target_samples = int(target_sec * sr)
-    if len(audio) >= target_samples:
-        return audio[:target_samples]
-
-    loops = int(math.ceil(target_samples / len(audio)))
-    chunks = [audio] * loops
-    out = crossfade_concat(chunks, sr, crossfade_ms=crossfade_ms)
-
-    if len(out) < target_samples:
-        pad = np.tile(audio, int(math.ceil((target_samples - len(out)) / len(audio))) + 1)
-        out = np.concatenate([out, pad], axis=0)
-
-    return out[:target_samples]
-
-
-def to_safe_stereo(audio_mono: np.ndarray) -> np.ndarray:
-    """Convert mono to stereo if needed."""
-    a = np.asarray(audio_mono)
-    if a.ndim == 1:
-        return np.stack([a, a], axis=1).astype(np.float32)
-    if a.ndim == 2 and a.shape[1] == 2:
-        return a.astype(np.float32)
-    raise ValueError(f"Unsupported audio shape: {a.shape}")
-
-
 # ---------------------------
 # MusicGen
 # ---------------------------
@@ -210,6 +141,7 @@ def parse_args():
         help="Device override",
     )
     p.add_argument("--output-dir", type=str, help="Override output directory")
+    p.add_argument("--takes-dir", type=str, help="Override takes directory")
     p.add_argument("--music-preset", type=str, help="Use specific music preset from config")
     return p.parse_args()
 
@@ -237,15 +169,10 @@ def main():
     gen_cfg = cfg.get("generation", {})
     prompt = gen_cfg.get("prompt", "lo-fi ambient music")
     num_tracks = int(gen_cfg.get("num_tracks", 4))
-    total_sec = int(gen_cfg.get("total_duration_sec", 3600))
-    select_track = gen_cfg.get("select_track", "auto")
     device_cfg = gen_cfg.get("device", "auto")
-    crossfade_ms = int(gen_cfg.get("crossfade_ms", 250))
     fade_ms = int(gen_cfg.get("fade_ms", 30))
     output_dir = gen_cfg.get("output_dir", "outputs")
-    takes_dir = gen_cfg.get("takes_dir", "outputs/_takes")
-    final_dir = gen_cfg.get("final_dir", "outputs/_final")
-    final_output = gen_cfg.get("final_output", "bgm.wav")
+    takes_dir_cfg = gen_cfg.get("takes_dir", "outputs/_takes")
 
     # Handle music preset
     if args.music_preset and "music" in cfg and "presets" in cfg["music"]:
@@ -256,12 +183,17 @@ def main():
     # CLI overrides
     if args.description:
         prompt = args.description
-    if args.duration:
-        total_sec = args.duration
     if args.num_tracks:
         num_tracks = args.num_tracks
     if args.output_dir:
         output_dir = args.output_dir
+    if args.takes_dir:
+        takes_dir = args.takes_dir
+    elif args.output_dir and takes_dir_cfg == "outputs/_takes":
+        takes_dir = os.path.join(output_dir, "_takes")
+    else:
+        takes_dir = takes_dir_cfg
+    
 
     # Device resolution
     device = resolve_device(cfg_device=device_cfg, cli_device=args.device)
@@ -269,13 +201,12 @@ def main():
     # Create directories
     os.makedirs(output_dir, exist_ok=True)
     os.makedirs(takes_dir, exist_ok=True)
-    os.makedirs(final_dir, exist_ok=True)
 
     print("=" * 60)
-    print(f"🎯 Target length : {total_sec} sec")
     print(f"🎵 Segment length: {segment_duration} sec")
+    print(f"🎯 Target duration: {num_tracks * segment_duration} sec ({num_tracks} segments)")
     print(f"🧩 Num segments  : {num_tracks}")
-    print(f"🔀 Crossfade     : {crossfade_ms} ms | Fade: {fade_ms} ms")
+    print(f"🔀 Fade          : {fade_ms} ms (per segment)")
     print(f"🧠 Device        : {device}")
     print("=" * 60)
 
@@ -326,40 +257,6 @@ def main():
 
     assert sr_final is not None
 
-    # Shuffle segments
-    print(f"\n🔀 Shuffling {num_tracks} tracks...")
-    shuffled_indices = list(range(num_tracks))
-    np.random.shuffle(shuffled_indices)
-    shuffled_segments = [segments[i] for i in shuffled_indices]
-
-    # Concatenate with crossfade
-    print(f"🔗 Concatenating all {num_tracks} tracks with crossfade...")
-    concatenated_audio = crossfade_concat(shuffled_segments, sr_final, crossfade_ms=crossfade_ms)
-
-    # Save playlist
-    playlist_path = os.path.join(output_dir, "playlist_all_tracks.wav")
-    sf.write(playlist_path, concatenated_audio, sr_final)
-    playlist_duration_sec = len(concatenated_audio) / sr_final
-    print(f"✅ Playlist saved: {playlist_path}")
-    print(f"   Length: {playlist_duration_sec:.1f} sec ({playlist_duration_sec/60:.2f} min)")
-
-    # Loop to target length
-    print(f"\n🔁 Looping to target length ({total_sec} sec)...")
-    final_audio = loop_to_length_crossfade(concatenated_audio, sr_final, total_sec, crossfade_ms=crossfade_ms)
-
-    # Convert to stereo
-    final_audio_stereo = to_safe_stereo(final_audio)
-
-    # Save final audio as stereo
-    final_path = os.path.join(output_dir, final_output)
-    sf.write(final_path, final_audio_stereo, sr_final)
-    print(f"✅ Final audio saved (stereo): {final_path}")
-
-    # Also save stereo version to _final folder for backup
-    final_path_stereo = os.path.join(final_dir, f"{Path(final_output).stem}_stereo.wav")
-    sf.write(final_path_stereo, final_audio_stereo, sr_final)
-    print(f"✅ Stereo backup saved: {final_path_stereo}")
-
     end_time = time.perf_counter()
     elapsed = end_time - start_time
 
@@ -367,10 +264,9 @@ def main():
     print(f"⏱️ Generation time: {elapsed:.2f}s ({elapsed/60:.2f} min)")
     print("=" * 60)
 
-    print("\n🎉 DONE! BGM created:")
-    print(f"   Raw   : {final_path}")
-    print(f"   Stereo: {final_path_stereo}")
-    print(f"   Length: {total_sec} sec")
+    print("\n🎉 DONE! Segments created:")
+    print(f"   Takes dir: {takes_dir}")
+    print(f"   Tracks: {num_tracks}")
     print()
 
     return 0

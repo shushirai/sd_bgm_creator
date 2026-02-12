@@ -62,24 +62,32 @@ image:
         low saturation with gentle teal-orange contrast, shallow depth of field bokeh,
         film grain, 35mm long exposure, dreamy and moody atmosphere, realistic photo
 
+    kyoto_tranquil_misty_night:
+      description: "夜の京都：幻想的×静か×霧（行灯と町家の温灯り）"
+      prompt: >
+        misty night street in Kyoto, stone-paved alley lit by soft paper lanterns, traditional machiya with wooden lattice and glowing shoji windows,
+        faint temple roofs and a vermilion torii glowing softly in the distance, gentle moonlight on tiled roofs,
+        few silhouettes, humid air diffusing warm light, dreamy and tranquil mood,
+        low saturation palette, soft contrast, cinematic, realistic photo
+
 # -----------------------------------------
 # MUSICGEN CONFIG
 # -----------------------------------------
 musicgen:
   model: "facebook/musicgen-large"
-  duration: 45  # 1セグメントの長さ（秒）
+  duration: 30  # 1セグメントの長さ（秒）
 
 # -----------------------------------------
 # GENERATION CONFIG
 # -----------------------------------------
 generation:
   prompt: "lo-fi hip-hop background music with soft piano and chill vibes"
-  num_tracks: 10                    # 生成するセグメント数
-  total_duration_sec: 3600         # 最終的なBGM長（秒）
+  num_tracks: 8                    # 生成するセグメント数
+  total_duration_sec: 7200         # 最終的なBGM長（秒）
   select_track: "auto"             # auto/first/random
   device: "auto"                   # auto/cuda/mps/cpu
-  crossfade_ms: 250                # クロスフェード長（ミリ秒）
-  fade_ms: 30                       # フェード長（ミリ秒）
+  crossfade_ms: 350                # クロスフェード長（ミリ秒）
+  fade_ms: 50                       # フェード長（ミリ秒）
   output_dir: "outputs"
   takes_dir: "outputs/_takes"      # 各セグメント保存先
   final_dir: "outputs/_final"      # 最終ファイル保存先
@@ -113,3 +121,67 @@ music:
     lofi_cafe_warmth:
       description: "カフェ作業：温かいコードと軽いビート"
       prompt: "warm lo-fi hip hop for cozy cafe study, 78-84 bpm, soft rimshots and brushed snare, upright bass, mellow piano chords, light vinyl crackle, no vocals, no sharp leads, unobtrusive and steady groove"
+
+    fireplace_reader:
+      description: "薪暖炉×読書：温かく静かな癒し系Lo-fi（集中・リラックス・読書用）"
+      prompt: >
+        cozy lo-fi ambient background music for reading in a room with a fireplace,
+        warm crackling fireplace atmosphere,
+        soft piano and felt piano tones,
+        gentle acoustic guitar harmonics,
+        warm Rhodes chords,
+        very soft brushed drums,
+        60-70 bpm,
+        deep warm low frequencies,
+        soft vinyl crackle,
+        subtle tape hiss,
+        no vocals,
+        no lead melody,
+        no sharp transients,
+        no bright highs,
+        smooth looping structure,
+        calm, intimate, peaceful,
+        relaxing, comforting, cinematic warmth,
+        perfect for reading, studying, late night focus, sleep preparation,
+        non-distracting, emotional but minimal,
+        warm analog texture, lo-fi, ambient, slow evolving
+
+    drive_night_warm:
+      description: "夜のドライブ×暖色Lo-fi：雨・街灯・車内BGM向け"
+      prompt: >
+        warm cinematic lo-fi ambient music for night driving,
+        soft felt piano chords,
+        warm Rhodes pads,
+        subtle low frequency movement,
+        slow drifting textures,
+        gentle stereo motion,
+        very soft brushed drums barely noticeable,
+        58-65 bpm,
+        deep warm bass,
+        smooth continuous flow,
+        no vocals,
+        no lead melody,
+        no catchy hooks,
+        no sharp transients,
+        no bright highs,
+        no abrupt changes,
+        calm, hypnotic, immersive,
+        perfect for night drive, rain drive, highway POV,
+        non-distracting, long-form listening,
+        warm analog lo-fi texture
+
+    drive_focus_lofi:
+      description: "夜ドライブ×集中ローファイ：読書・勉強用の長尺BGM"
+      prompt: >
+        long-form lo-fi ambient hip hop for nighttime driving and deep focus,
+        warm rhodes and soft felt piano,
+        slow sidechained pads with gentle sub bass,
+        65-72 bpm steady groove,
+        very light brushed drums and rim clicks only,
+        subtle vinyl hiss and distant rain through car windows,
+        no vocals, no lead melodies, no bright highs,
+        smooth seamless looping, no abrupt changes,
+        hypnotic, non-distracting, steady atmosphere,
+        wide but soft stereo image,
+        designed for studying, reading, late-night coding focus,
+        cinematic yet minimal, warm analog texture

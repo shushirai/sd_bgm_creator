@@ -77,30 +77,59 @@ def run_music_generation(
     num_tracks: Optional[int] = None,
     music_preset: Optional[str] = None,
 ) -> bool:
-    """BGM生成を実行"""
+    """BGM生成を実行: セグメント生成 → 別スクリプトで組み立て"""
     print(f"\n{'='*60}")
     print(f"🎵 BGM生成開始")
     print(f"{'='*60}\n")
+    if duration is not None:
+        print(f"🎯 Target duration : {duration} sec")
+    if num_tracks is not None:
+        print(f"🧩 Num segments     : {num_tracks}")
+    print()
     
-    cmd = [
+    takes_dir: Optional[Path] = None
+    if output_dir is not None:
+        takes_dir = Path(output_dir) / "_takes"
+
+    # 1) generate segments
+    gen_cmd = [
         sys.executable,
         "music_gen/music_gen.py",
     ]
-    
+
     if music_preset:
-        cmd.extend(["--music-preset", music_preset])
+        gen_cmd.extend(["--music-preset", music_preset])
     else:
-        cmd.extend(["--description", description])
-    
-    if duration is not None:
-        cmd.extend(["--duration", str(duration)])
+        gen_cmd.extend(["--description", description])
+
     if num_tracks is not None:
-        cmd.extend(["--num-tracks", str(num_tracks)])
+        gen_cmd.extend(["--num-tracks", str(num_tracks)])
     if output_dir is not None:
-        cmd.extend(["--output-dir", str(output_dir)])
-    
-    result = subprocess.run(cmd)
-    return result.returncode == 0
+        gen_cmd.extend(["--output-dir", str(output_dir)])
+    if takes_dir is not None:
+        gen_cmd.extend(["--takes-dir", str(takes_dir)])
+
+    result_gen = subprocess.run(gen_cmd)
+    if result_gen.returncode != 0:
+        return False
+
+    # 2) assemble segments into final BGM
+    asm_cmd = [
+        sys.executable,
+        "music_gen/assemble_bgm.py",
+    ]
+
+    if takes_dir is not None:
+        asm_cmd.extend(["--takes-dir", str(takes_dir)])
+    if output_dir is not None:
+        asm_cmd.extend(["--output-dir", str(output_dir)])
+    if duration is not None:
+        asm_cmd.extend(["--duration", str(duration)])
+    if num_tracks is not None:
+        asm_cmd.extend(["--num-tracks", str(num_tracks)])
+
+    result_asm = subprocess.run(asm_cmd)
+    return result_asm.returncode == 0
 
 
 
@@ -225,6 +254,13 @@ def main():
     music_description = args.music_description
     music_duration = args.music_duration
     music_num_tracks = args.music_num_tracks
+
+    # generation defaults from config (used when CLI not provided)
+    gen_cfg = config.get("generation", {})
+    if music_duration is None:
+        music_duration = gen_cfg.get("total_duration_sec")
+    if music_num_tracks is None:
+        music_num_tracks = gen_cfg.get("num_tracks")
     
     # config から image count のデフォルト値を取得（CLIで上書き可能）
     if image_count is None and "image" in config and "common" in config["image"]:
