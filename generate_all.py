@@ -310,8 +310,8 @@ def main():
     timestamp = now_stamp()
     base_output = Path(args.output_base).expanduser()
     integrated_folder = base_output / timestamp
-    images_folder = integrated_folder / "images"
-    music_folder = integrated_folder / "music"
+    images_folder = integrated_folder / "IMAGWES"
+    music_folder = integrated_folder / "MUSIC"
     
     ensure_dir(images_folder)
     ensure_dir(music_folder)
