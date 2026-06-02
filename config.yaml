@@ -75,34 +75,67 @@ image:
 # -----------------------------------------
 musicgen:
   model: "facebook/musicgen-stereo-large"
-  duration: 45  # 1セグメントの長さ（秒）
+  duration: 30  # 1セグメントの長さ（秒）
 
 # -----------------------------------------
 # GENERATION CONFIG
 # -----------------------------------------
+
 generation:
   prompt: >
-    Atmospheric Japanese night drive lofi.
-    Smooth electric piano, warm ambient synth pads,
-    deep soft bass, subtle vinyl texture,
-    gentle kick and snare, relaxing midnight energy.
+    Japanese midnight drive ambient lo-fi for deep focus and long listening.
 
-    Inspired by quiet suburban expressways,
-    distant city lights, empty roads,
-    and calm late-night highway driving in Japan.
+    Warm felt piano and soft Rhodes chords,
+    deep gentle sub bass,
+    subtle analog texture and soft vinyl hiss,
+    restrained brushed percussion only.
 
-    Focus on deep concentration, studying,
-    reading, working, and relaxation.
+    Slow and predictable rhythm,
+    minimal instrumentation,
+    sparse arrangement,
+    lots of negative space,
+    smooth evolving atmosphere.
 
-    Minimal arrangement, non-intrusive melodies,
-    clean modern mix, warm analog texture,
-    emotional cinematic atmosphere,
-    smooth transitions, low BPM (70-85),
-    loopable structure, no vocals,
+    No vocals,
+    no lead melody,
+    no catchy hooks,
+    no melodic solos,
+    no bright highs,
     no aggressive percussion,
-    perfect for long listening sessions.
+    no sharp transients,
+    no sudden changes.
 
-  num_tracks: 18
+    Soft high frequencies,
+    rolled-off top end,
+    fatigue-free sound design,
+    comfortable for multi-hour listening sessions.
+
+    Designed for studying,
+    reading,
+    writing,
+    programming,
+    deep work,
+    and late-night concentration.
+
+    Emotionally subtle,
+    calm and stable atmosphere,
+    supportive harmony only,
+    background-oriented mix.
+
+    Inspired by quiet Japanese expressways at midnight,
+    distant rain reflections,
+    empty suburban roads,
+    and peaceful urban solitude.
+
+    Seamless loopable structure,
+    warm analog ambience,
+    hypnotic but unobtrusive,
+    steady flow state energy.
+
+    BPM 68-74.
+
+
+  num_tracks: 10
 
   total_duration_sec: 5400   # 90分
 
@@ -150,55 +183,6 @@ music:
         non-distracting, emotional but minimal,
         warm analog texture, lo-fi, ambient, slow evolving
 
-    drive_focus_lofi:
-      description: "夜ドライブ×集中ローファイ：読書・勉強用の長尺BGM"
-      prompt: >
-        long-form lo-fi ambient hip hop for nighttime driving and deep focus,
-        warm rhodes and soft felt piano,
-        slow sidechained pads with gentle sub bass,
-        65-72 bpm steady groove,
-        very light brushed drums and rim clicks only,
-        subtle vinyl hiss and distant rain through car windows,
-        no vocals, no lead melodies, no bright highs,
-        smooth seamless looping, no abrupt changes,
-        hypnotic, non-distracting, steady atmosphere,
-        wide but soft stereo image,
-        designed for studying, reading, late-night coding focus,
-        cinematic yet minimal, warm analog texture
-
-    lofi_slow_calm:
-      description: "ゆったり安堵するローファイ：心が落ち着く温かさ"
-      prompt: >
-        slow soothing lo-fi hip hop for relaxation and calm focus,
-        64-70 bpm with gentle swing,
-        soft felt piano chords and mellow rhodes pads,
-        warm upright bass and light sidechain breathing,
-        brushed snare and rim clicks very low in the mix,
-        vinyl crackle and soft tape hiss for cozy texture,
-        no vocals, no lead melody, no bright highs,
-        smooth continuous loop without drops or risers,
-        faint room ambience with distant rain,
-        tranquil, unhurried, comforting mood for reading, journaling, or unwinding
-
-    piano_night_study:
-      description: "夜の勉強・読書用：ピアノ主体のゆったり集中BGM"
-      prompt: >
-        gentle solo piano ambient music for late-night studying and reading,
-        slow arpeggios and sustained chords on a warm felt piano,
-        sparse minimal arrangement with piano as the sole instrument,
-        subtle room reverb creating intimate space,
-        58-66 bpm, rubato feel, unhurried phrasing,
-        soft sustain pedal resonance,
-        occasional gentle silence between phrases,
-        no drums, no percussion, no bass, no synths,
-        no vocals, no lead melody hooks,
-        no bright highs, no sharp transients, no abrupt changes,
-        ultra smooth and seamless for long listening,
-        warm analog character with faint tape hiss,
-        calm, meditative, soothing, emotionally tender,
-        perfect for deep focus, night study, quiet reading, contemplation,
-        non-distracting, continuous, peaceful atmosphere
-
     deep_work_flow:
       description: "読書・勉強・仕事の作業用：集中を維持する穏やかなローファイ"
       prompt: >
@@ -218,27 +202,3 @@ music:
         designed for reading, studying, coding, writing, office work,
         non-distracting background that enhances flow state,
         warm analog lo-fi texture, minimal and functional
-
-    night_drive_lofi:
-      description: "夜の高速道路×暖色Lo-fi：勉強・読書・仕事向け"
-      prompt: >
-        Atmospheric Japanese night drive lofi.
-
-        Smooth electric piano, warm ambient synth pads,
-        deep soft bass, subtle vinyl texture,
-        gentle kick and snare, relaxing midnight energy.
-
-        Inspired by quiet suburban expressways,
-        distant city lights, empty roads,
-        and calm late-night highway driving in Japan.
-
-        Focus on deep concentration, studying,
-        reading, working, and relaxation.
-
-        Minimal arrangement, non-intrusive melodies,
-        clean modern mix, warm analog texture,
-        emotional cinematic atmosphere,
-        smooth transitions, low BPM (70-85),
-        loopable structure, no vocals,
-        no aggressive percussion,
-        perfect for long listening sessions.
