@@ -82,6 +82,9 @@ metadata.json
 # Hugging Face cache (optional)
 # ~/.cache/huggingface/
 
+# Vendor (ACE-Step patched source - large, do not commit)
+vendor/
+
 # Testing
 .pytest_cache/
 .coverage

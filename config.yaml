@@ -151,48 +151,99 @@ image:
         peaceful ambience,
         shallow depth of field
 
-    kyoto_rain_lantern_alley:
-      description: "京都×雨×灯籠の癒し系"
-      prompt: >
-        rainy alley in Kyoto at night,
-        glowing paper lanterns,
-        traditional wooden machiya houses,
-        wet stone pavement reflecting warm light,
-        soft mist drifting through the alley,
-        quiet peaceful atmosphere,
-        lone traveler with umbrella,
-        cinematic composition,
-        realistic photography,
-        low saturation color palette,
-        warm amber lights,
-        soft contrast,
-        film grain,
-        dreamy and healing atmosphere
 
-    japanese_coastal_drive_lofi:
-      description: "日本の海沿いドライブ aesthetic"
-      prompt: >
-        cinematic coastal road in Japan at dusk,
-        ocean beside the road,
-        japanese kei car driving slowly,
-        cloudy sky after rain,
-        wet asphalt reflections,
-        utility poles along the coast,
-        peaceful atmosphere,
-        nostalgic summer mood,
-        low saturation cinematic colors,
-        dreamy lighting,
-        film grain,
-        realistic photography,
-        calming scenery,
-        relaxing vibe
+  tokyo_rain_no_text:
+    description: "漢字なしで“夜の東京”を感じる cinematic aesthetic"
+
+    prompt: >
+      cinematic rainy night in Tokyo,
+      quiet urban side street,
+      wet asphalt with mirror reflections,
+      glowing convenience store light without visible text,
+      vending machine glow with blurred details,
+      warm apartment windows,
+      elevated train tracks overhead,
+      narrow alleyways,
+      power lines crossing the sky,
+      soft neon lighting without readable signs,
+      humid air and drifting mist,
+      lone figure with transparent umbrella seen from behind,
+      parked bicycles,
+      distant car headlights through rain,
+      shallow depth of field,
+      strong bokeh lights,
+      low saturation cinematic colors,
+      teal and amber color grading,
+      peaceful loneliness,
+      healing atmosphere,
+      late night Tokyo ambience,
+      realistic photography,
+      35mm film still,
+      kodak portra 400,
+      film grain,
+      ultra realistic
+
+    negative_prompt: >
+      readable text,
+      japanese text,
+      kanji,
+      hiragana,
+      katakana,
+      subtitles,
+      logo,
+      watermark,
+      billboard,
+      signboard,
+      street signs,
+      close-up signage,
+      anime,
+      cartoon,
+      illustration,
+      oversaturated colors,
+      bright daylight,
+      close-up face,
+      portrait,
+      distorted anatomy,
+      extra limbs,
+      bad hands,
+      blurry low quality
 
 # -----------------------------------------
-# MUSICGEN CONFIG
+# MUSIC GENERATION BACKEND CONFIG
+# -----------------------------------------
+# model_type: "musicgen" | "acestep"
+# -----------------------------------------
+# [Migration note]
+#   旧: facebook/musicgen-stereo-large  (CC-BY-NC 4.0 → 商用不可)
+#   新: ACE-Step/ACE-Step-v1-3.5B       (Apache 2.0  → 商用OK / YouTube収益化対応)
 # -----------------------------------------
 musicgen:
-  model: "facebook/musicgen-stereo-large"
-  duration: 30  # 1セグメントの長さ（秒）
+  model_type: "acestep"
+
+  # --- ACE-Step v1.0（現在・動作確認済み） ---
+  # Apache 2.0 / 最大240秒 / Mac MPS 対応
+  model: "ACE-Step/ACE-Step-v1-3.5B"
+  duration: 240           # 1セグメントの長さ（秒）。最大240（4分）
+  infer_step: 60          # v1.0: 品質優先は60。速度優先は27
+  guidance_scale: 15.0    # プロンプト追従強度。7〜20推奨
+  scheduler_type: "euler" # euler | dpmpp-3m-sde
+  cfg_type: "apg"         # apg | cfg
+  bf16: false             # Mac(MPS)はfalse必須。Linux(CUDA)はtrueで高速化
+
+  # --- ACE-Step v1.5（アップグレード推奨・スコア+37%） ---
+  # MIT License / LM+DiT新アーキテクチャ / 10分曲対応 / 50+言語
+  # アップグレード手順:
+  #   1. git clone https://github.com/ace-step/ACE-Step-1.5.git vendor/ace-step-1.5
+  #   2. pip install -e vendor/ace-step-1.5
+  #   3. model: "ACE-Step/Ace-Step1.5"
+  # model: "ACE-Step/Ace-Step1.5"
+  # duration: 240
+  # infer_step: 50
+
+  # --- MusicGen (旧・非商用のみ) ---
+  # model_type: "musicgen"
+  # model: "facebook/musicgen-stereo-large"
+  # duration: 25
 
 # -----------------------------------------
 # GENERATION CONFIG
@@ -200,61 +251,19 @@ musicgen:
 
 generation:
   prompt: >
-    Japanese midnight drive ambient lo-fi for deep focus and long listening.
-
-    Warm felt piano and soft Rhodes chords,
-    deep gentle sub bass,
-    subtle analog texture and soft vinyl hiss,
-    restrained brushed percussion only.
-
-    Slow and predictable rhythm,
-    minimal instrumentation,
-    sparse arrangement,
-    lots of negative space,
-    smooth evolving atmosphere.
-
-    No vocals,
-    no lead melody,
-    no catchy hooks,
-    no melodic solos,
-    no bright highs,
-    no aggressive percussion,
-    no sharp transients,
-    no sudden changes.
-
-    Soft high frequencies,
-    rolled-off top end,
-    fatigue-free sound design,
-    comfortable for multi-hour listening sessions.
-
-    Designed for studying,
-    reading,
-    writing,
-    programming,
-    deep work,
-    and late-night concentration.
-
-    Emotionally subtle,
-    calm and stable atmosphere,
-    supportive harmony only,
-    background-oriented mix.
-
-    Inspired by quiet Japanese expressways at midnight,
-    distant rain reflections,
-    empty suburban roads,
-    and peaceful urban solitude.
-
-    Seamless loopable structure,
-    warm analog ambience,
-    hypnotic but unobtrusive,
-    steady flow state energy.
-
-    BPM 68-74.
+    lo-fi, ambient, instrumental,
+    felt piano, Rhodes pads, soft upright bass, brushed drums,
+    vinyl crackle, tape hiss, analog warmth,
+    70 bpm, slow groove,
+    late night Tokyo, midnight drive, rain reflections, urban solitude,
+    calm, focused, nostalgic, peaceful,
+    study music, deep work, background music,
+    seamless loop, long listening session
 
 
-  num_tracks: 10
+  num_tracks: 15
 
-  total_duration_sec: 5400   # 90分
+  total_duration_sec: 7200   # 120分
 
   select_track: "auto"
 
@@ -279,43 +288,64 @@ music:
     fireplace_reader:
       description: "薪暖炉×読書：温かく静かな癒し系Lo-fi（集中・リラックス・読書用）"
       prompt: >
-        cozy lo-fi ambient background music for reading in a room with a fireplace,
-        warm crackling fireplace atmosphere,
-        soft piano and felt piano tones,
-        gentle acoustic guitar harmonics,
-        warm Rhodes chords,
-        very soft brushed drums,
-        60-70 bpm,
-        deep warm low frequencies,
-        soft vinyl crackle,
-        subtle tape hiss,
-        no vocals,
-        no lead melody,
-        no sharp transients,
-        no bright highs,
-        smooth looping structure,
-        calm, intimate, peaceful,
-        relaxing, comforting, cinematic warmth,
-        perfect for reading, studying, late night focus, sleep preparation,
-        non-distracting, emotional but minimal,
-        warm analog texture, lo-fi, ambient, slow evolving
+        lo-fi, ambient, instrumental,
+        felt piano, acoustic guitar, warm Rhodes,
+        crackling fireplace ambience, vinyl crackle, tape hiss,
+        65 bpm, soft brushed drums,
+        cozy, warm, intimate, peaceful,
+        reading, relaxing, late night, sleep preparation,
+        seamless loop, analog warmth
 
     deep_work_flow:
       description: "読書・勉強・仕事の作業用：集中を維持する穏やかなローファイ"
       prompt: >
-        smooth lo-fi ambient background music for deep work and long study sessions,
-        72-76 bpm steady and predictable rhythm,
-        warm felt piano with gentle chord progressions,
-        soft rhodes pads slowly evolving in the background,
-        light brushed hi-hats and subtle rim clicks,
-        warm sub bass with gentle sidechain breathing,
-        soft vinyl crackle and tape hiss for analog warmth,
-        wide stereo reverb creating spacious room feel,
-        no vocals, no lead melody, no hooks, no drops,
-        no bright highs, no sharp transients, no sudden changes,
-        seamless looping structure with no noticeable repeats,
-        consistent energy level throughout without builds or breakdowns,
-        calm, focused, unobtrusive, steady concentration atmosphere,
-        designed for reading, studying, coding, writing, office work,
-        non-distracting background that enhances flow state,
-        warm analog lo-fi texture, minimal and functional
+        lo-fi, ambient, instrumental,
+        felt piano, Rhodes pads, soft sub bass, brushed hi-hats, rim clicks,
+        vinyl crackle, tape hiss, wide reverb,
+        74 bpm, steady groove,
+        calm, focused, minimal, unobtrusive,
+        deep work, study, coding, writing, flow state,
+        seamless loop, consistent energy
+
+    rainy_tokyo_cafe:
+      description: "【最高バズ期待値】雨の東京カフェ：海外Lo-fi界で最も需要が高いテーマ"
+      prompt: >
+        lo-fi jazz, ambient, instrumental,
+        jazz piano, upright bass, brushed drums, acoustic guitar,
+        rain ambience, cafe room reverb, vinyl crackle,
+        74 bpm, swung groove, relaxed pocket,
+        Tokyo cafe, rainy day, warm, nostalgic, peaceful,
+        study music, deep work, seamless loop
+
+    dark_academia_piano:
+      description: "【TikTok/YouTube急成長】ダークアカデミア：深夜の図書館・古典文学・知的集中"
+      prompt: >
+        neoclassical, ambient, instrumental,
+        solo piano, cello, string ensemble,
+        deep cathedral reverb, distant thunder, gentle rain,
+        64 bpm, rubato, minor key, melancholic,
+        dark academia, old library, candlelight, contemplative,
+        Erik Satie inspired, late Romantic,
+        essay writing, deep research, seamless loop
+
+    synthwave_night_coding:
+      description: "【プログラマー・ゲーマー層】シンセウェーブ：深夜コーディング・サイバーパンク集中"
+      prompt: >
+        synthwave, retrowave, ambient, instrumental,
+        analog synth pads, arpeggiated synth, soft bass, drum machine,
+        sidechain compression, stereo delay, deep reverb,
+        92 bpm, steady, mechanical,
+        neon city, cyberpunk, 80s retro, dark, atmospheric,
+        coding, programming, focused, hypnotic,
+        flow state, seamless loop
+
+    japanese_ambient_countryside:
+      description: "【癒し系・瞑想層】日本の田舎×自然音：Ghibli感のある穏やかなアンビエント"
+      prompt: >
+        ambient, new age, instrumental,
+        acoustic piano, shakuhachi flute, koto,
+        cicadas, gentle breeze, nature sounds, wide open reverb,
+        62 bpm, pentatonic scale, slow and floating,
+        Japan countryside, summer afternoon, nostalgic, peaceful,
+        Ghibli-inspired, healing, meditative,
+        meditation, yoga, relaxation, seamless loop

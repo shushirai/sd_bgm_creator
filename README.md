@@ -366,6 +366,43 @@ music:
 3. ✅ 処理時間表示（画像、BGM、合計）
 4. ✅ metadata.json に処理時間を記録
 
+### 改修履歴（2026年4月〜6月）
+
+#### BGMモデル移行: MusicGen → ACE-Step（2026年4月〜5月）
+1. ✅ **MusicGen廃止・ACE-Step採用**: MusicGen (CC-BY-NC、商用不可) から ACE-Step v1.0 (Apache 2.0、商用可) に移行
+2. ✅ **dual-backend 対応**: `music_gen/music_gen.py` を ACE-Step / MusicGen 両対応に書き換え
+3. ✅ **ローカルvendor管理**: ACE-Step を `vendor/ace-step/` に配置（editable install）
+   - PyPI の spacy==3.8.4 バグを回避するため `spacy>=3.8.7` にパッチ済み
+4. ✅ **torchaudio 2.9.1 互換修正**: `vendor/ace-step/acestep/pipeline_ace_step.py` の `save_wav_file` を `soundfile` 使用に変更（torchcodec 不要）
+5. ✅ **モデルキャッシュ**: `~/.cache/ace-step/checkpoints/` に自動ダウンロード（約8GB）
+
+#### 画像プリセット追加（2026年4月）
+追加プリセット（`image.presets` 以下）:
+- `japan_rainy_convenience_store` — 雨夜のコンビニ×ネオン反射
+- `nostalgic_japan_train_crossing` — ノスタルジックな踏切と田舎道
+- `tokyo_lofi_window_view` — 東京の窓から眺める夜景×Lo-fi
+- `kyoto_rain_lantern_alley` — 京都の雨×石畳×提灯
+- `japanese_coastal_drive_lofi` — 海岸線ドライブ×夕暮れ
+- `tokyo_rain_no_text` — 雨の東京（テキストなし、YouTube サムネ向け）
+
+#### BGMプリセット追加（2026年5月）
+追加プリセット（`music.presets` 以下）:
+- `rainy_tokyo_cafe` — 雨の東京カフェ × Lo-fi Jazz（最高バズ期待値）
+- `dark_academia_piano` — ダークアカデミア × 深夜図書館ピアノ（TikTok/YouTube急成長）
+- `synthwave_night_coding` — シンセウェーブ × 深夜コーディング（プログラマー・ゲーマー層）
+- `japanese_ambient_countryside` — 日本田舎 × 自然音 × Ghibli感（癒し系）
+
+#### BGMプロンプト最適化（2026年6月）
+- **全プロンプトをACE-Stepタグ形式に変換**: MusicGen向けの長文散文 → コンマ区切りタグ形式
+  - 例: `lo-fi, jazz piano, upright bass, rain ambience, 74 bpm, Tokyo cafe, nostalgic, study music`
+  - ACE-Stepはタグ形式の方が各属性を正確に反映し生成品質が向上する
+- 対象: `generation.prompt`（デフォルト）および全6音楽プリセット
+
+#### ACE-Step v1.5 へのアップグレード（準備中）
+- v1.0 (score 28.5) → v1.5 (score 39.1、+37%)、License: MIT
+- v1.5-XL は score 47.9（Suno v5 超え）
+- アップグレード手順は `config.yaml` の `musicgen:` セクションのコメントを参照
+
 ## 📄 ライセンス
 
 MIT License
@@ -373,9 +410,10 @@ MIT License
 ## 🎓 参考モデル
 
 - **Image Generation**: [Stable Diffusion v1.5](https://huggingface.co/runwayml/stable-diffusion-v1-5)
-- **Audio Generation**: [MusicGen Large](https://huggingface.co/facebook/musicgen-large)
-- **Audio Processing**: lofi_batch.py パターン（マルチセグメント + シャッフル + クロスフェード）
+- **Audio Generation**: [ACE-Step v1.0](https://huggingface.co/ACE-Step/ACE-Step-v1-3.5B)（Apache 2.0）
+  - 旧: [MusicGen Large](https://huggingface.co/facebook/musicgen-large)（CC-BY-NC、商用不可のため廃止）
+- **Audio Processing**: マルチセグメント生成 + シャッフル + クロスフェード + ループ処理
 
 ---
 
-**Last Updated**: 2026年1月21日
+**Last Updated**: 2026年6月3日

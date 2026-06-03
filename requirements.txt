@@ -8,11 +8,20 @@ numpy>=1.24.0
 tqdm>=4.65.0
 omegaconf>=2.3.0
 
-# Music Generation (AudioCraft)
-torch==2.1.0
-torchaudio==2.1.0
-audiocraft==1.2.0
-scipy==1.11.4
+# Music Generation
+# --- ACE-Step (推奨: Apache 2.0 / 商用OK / 最大240秒 / YouTube収益化対応) ---
+# インストール:
+#   pip install git+https://github.com/ace-step/ACE-Step.git
+# Mac(MPS)での注意: config.yaml の musicgen.bf16 を false に設定すること
+#
+# --- MusicGen (旧: CC-BY-NC 4.0 / 非商用のみ) ---
+# torch==2.1.0
+# torchaudio==2.1.0
+# audiocraft==1.2.0
+# scipy==1.11.4
+torch>=2.1.0
+torchaudio>=2.1.0
+soundfile>=0.12.0
 
 # Utilities
 pyyaml>=6.0
