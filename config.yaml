@@ -18,13 +18,31 @@ image:
     batch_size: 1
     count: 5  # 生成する画像枚数（CLIで上書き可能）
 
-    negative_prompt: >
-      close-up face, portrait, selfie, looking at camera,
-      anime, cartoon, illustration,
-      oversaturated, vibrant colors,
-      text, watermark, logo, signature,
-      blurry, low quality, distorted,
-      extra limbs, bad hands
+ 
+  negative_prompt: >
+    readable text,
+    japanese text,
+    kanji,
+    subtitles,
+    watermark,
+    logo,
+    street signs,
+    billboard text,
+    distorted letters,
+    malformed typography,
+    close-up signage,
+    close-up face,
+    portrait,
+    anime,
+    cartoon,
+    oversaturated colors,
+    blurry,
+    low quality,
+    distorted anatomy,
+    extra limbs,
+    bad hands
+
+
 
   presets:
     sakura_wet_snowy:
@@ -69,6 +87,105 @@ image:
         faint temple roofs and a vermilion torii glowing softly in the distance, gentle moonlight on tiled roofs,
         few silhouettes, humid air diffusing warm light, dreamy and tranquil mood,
         low saturation palette, soft contrast, cinematic, realistic photo
+
+    japan_rainy_convenience_store:
+      description: "海外で伸びやすい日本夜景 aesthetic（コンビニ＋雨＋孤独感）"
+      prompt: >
+        cinematic rainy night in Japan,
+        quiet Tokyo side street,
+        glowing Japanese convenience store,
+        wet asphalt with mirror reflections,
+        solitary person holding transparent umbrella seen from behind,
+        vending machine glowing softly,
+        light fog, humid air,
+        subtle neon signs,
+        power lines overhead,
+        late night loneliness,
+        peaceful atmosphere,
+        low saturation cinematic colors,
+        soft teal and amber tones,
+        shallow depth of field,
+        35mm film still,
+        kodak portra,
+        film grain,
+        ultra realistic photo
+
+    nostalgic_japan_train_crossing:
+      description: "海外人気が非常に高い踏切 aesthetic"
+      prompt: >
+        nostalgic Japanese railroad crossing at night,
+        light rain falling,
+        wet reflective street,
+        quiet suburban Japan,
+        glowing crossing lights,
+        small traditional houses,
+        vending machine nearby,
+        lone bicycle parked beside the road,
+        warm window lights,
+        misty atmosphere,
+        melancholic mood,
+        cinematic framing,
+        realistic photography,
+        low saturation,
+        soft film grain,
+        dreamy atmosphere,
+        ultra realistic
+
+    tokyo_lofi_window_view:
+      description: "作業用LOFI系で超強い窓際 aesthetic"
+      prompt: >
+        cozy Tokyo apartment at night,
+        rain on window glass,
+        blurry neon city lights outside,
+        warm desk lamp glow,
+        japanese room interior,
+        laptop on wooden desk,
+        cup of coffee,
+        calm atmosphere,
+        relaxing late night mood,
+        cinematic lighting,
+        soft shadows,
+        realistic photo,
+        film grain,
+        low saturation,
+        peaceful ambience,
+        shallow depth of field
+
+    kyoto_rain_lantern_alley:
+      description: "京都×雨×灯籠の癒し系"
+      prompt: >
+        rainy alley in Kyoto at night,
+        glowing paper lanterns,
+        traditional wooden machiya houses,
+        wet stone pavement reflecting warm light,
+        soft mist drifting through the alley,
+        quiet peaceful atmosphere,
+        lone traveler with umbrella,
+        cinematic composition,
+        realistic photography,
+        low saturation color palette,
+        warm amber lights,
+        soft contrast,
+        film grain,
+        dreamy and healing atmosphere
+
+    japanese_coastal_drive_lofi:
+      description: "日本の海沿いドライブ aesthetic"
+      prompt: >
+        cinematic coastal road in Japan at dusk,
+        ocean beside the road,
+        japanese kei car driving slowly,
+        cloudy sky after rain,
+        wet asphalt reflections,
+        utility poles along the coast,
+        peaceful atmosphere,
+        nostalgic summer mood,
+        low saturation cinematic colors,
+        dreamy lighting,
+        film grain,
+        realistic photography,
+        calming scenery,
+        relaxing vibe
 
 # -----------------------------------------
 # MUSICGEN CONFIG
